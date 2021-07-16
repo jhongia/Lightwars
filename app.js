@@ -3,14 +3,15 @@ const { urlencoded } = require('body-parser');
 const express = require('express');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv').config();
 const encrypt = require('mongoose-encryption');
+const dotenv = require('dotenv').config();
 const passport = require('passport');
 
 const app = express();
 const username = process.env.USERNAME;
 const password = process.env.PASS;
 const address = process.env.ADDRESS;
+const secret = process.env.SECRET;
 
 app.use(urlencoded({extended: true}));
 app.use(express.static('public'));
@@ -18,11 +19,12 @@ app.set('view engine', 'ejs');
 
 mongoose.connect('mongodb+srv://' + username + ':' + password + '@' + address + '.mongodb.net/usersDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
-const userSchema = {
+const userSchema = new mongoose.Schema ({
     email: String,
     password: String
-};
+});
 
+userSchema.plugin(encrypt, { secret: secret, encryptedFields: ["password"]});
 const User = new mongoose.model('User', userSchema);
 
 app.get('/', (req, res) => {
