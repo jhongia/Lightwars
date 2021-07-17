@@ -165,7 +165,7 @@ app.post('/login', (req, res) => {
     req.login(user, (err) => {
         if(err) {
             console.log(err);
-            res.redirect('/login');
+            res.redirect('login');
         } else {
             passport.authenticate('local')(req, res, () => {
                 res.redirect('/secrets');
