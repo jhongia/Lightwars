@@ -12,6 +12,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
 const saltRounds = 10;
 const RateLimit = require('express-rate-limit');
+const lusca = require('lusca');
 
 const app = express();
 const username = process.env.USERNAME;
@@ -29,6 +30,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+
+app.use(lusca.csrf());
 
 app.use(passport.initialize());
 app.use(passport.session());
