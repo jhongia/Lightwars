@@ -12,7 +12,6 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
 const RateLimit = require('express-rate-limit');
 const saltRounds = 10;
-const RateLimit = require('express-rate-limit');
 const lusca = require('lusca');
 
 const app = express();
@@ -21,6 +20,11 @@ const password = process.env.PASS;
 const address = process.env.ADDRESS;
 const secret = process.env.SECRET;
 const sessionSecret = process.env.LITSECRET;
+
+const secretsLimiter = RateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per window to /secrets
+});
 
 app.use(urlencoded({extended: true}));
 app.use(express.static('public'));
@@ -101,7 +105,7 @@ app.get('/register', (req, res) => {
     res.render('register');
 });
 
-app.get('/secrets', (req, res) => {
+app.get('/secrets', secretsLimiter, (req, res) => {
     if (req.isAuthenticated()) {
       User.find({ secret: { $ne: null } }, function (err, foundUsers) {
         if (err) {
