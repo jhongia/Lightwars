@@ -10,6 +10,7 @@ const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
+const RateLimit = require('express-rate-limit');
 const saltRounds = 10;
 const RateLimit = require('express-rate-limit');
 const lusca = require('lusca');
@@ -124,7 +125,7 @@ app.get('/submit', (req, res) => {
     }
 });
 
-app.post('/submit', (req, res) => {
+app.post('/submit', submitLimiter, (req, res) => {
     const submittedSecret = req.body.secret;
 
     User.findById(req.user.id, (err, foundUser) => {
@@ -149,6 +150,11 @@ app.get('/logout', (req, res) => {
 const loginLimiter = RateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 10, // limit each IP to 10 login requests per windowMs
+});
+
+const submitLimiter = RateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 50, // limit each IP to 50 submit requests per windowMs
 });
 
 app.post('/register', (req, res) => {
