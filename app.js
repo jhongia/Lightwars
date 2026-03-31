@@ -11,6 +11,7 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
 const saltRounds = 10;
+const RateLimit = require('express-rate-limit');
 
 const app = express();
 const username = process.env.USERNAME;
@@ -142,6 +143,11 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 })
 
+const loginLimiter = RateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // limit each IP to 10 login requests per windowMs
+});
+
 app.post('/register', (req, res) => {
 
    User.register({username: req.body.username}, req.body.password, (err, user) => {
@@ -156,7 +162,7 @@ app.post('/register', (req, res) => {
    });
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', loginLimiter, (req, res) => {
     const user = new User({
         username: req.body.username,
         password: req.body.password
