@@ -134,7 +134,7 @@ app.get('/submit', submitLimiter, (req, res) => {
     }
 });
 
-app.post('/submit', submitLimiter, (req, res) => {
+app.post('/submit', submitPostLimiter, (req, res) => {
     const submittedSecret = req.body.secret;
 
     User.findById(req.user.id, (err, foundUser) => {
@@ -164,6 +164,11 @@ const loginLimiter = RateLimit({
 const submitLimiter = RateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 50, // limit each IP to 50 submit requests per windowMs
+});
+
+const submitPostLimiter = RateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20, // limit each IP to 20 submit POST requests per windowMs
 });
 
 app.post('/register', (req, res) => {
