@@ -33,7 +33,12 @@ app.set('view engine', 'ejs');
 app.use(session({
     secret: sessionSecret,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production'
+    }
 }));
 
 app.use(lusca.csrf());
