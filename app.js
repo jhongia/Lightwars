@@ -121,7 +121,7 @@ app.get('/secrets', secretsLimiter, (req, res) => {
     }
 });
 
-app.get('/submit', (req, res) => {
+app.get('/submit', submitLimiter, (req, res) => {
     if(req.isAuthenticated()) {
         res.render('submit');
     } else {
