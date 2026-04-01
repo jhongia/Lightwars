@@ -106,6 +106,21 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
+const loginLimiter = RateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // limit each IP to 10 login requests per windowMs
+});
+
+const submitLimiter = RateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 50, // limit each IP to 50 submit requests per windowMs
+});
+
+const submitPostLimiter = RateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20, // limit each IP to 20 submit POST requests per windowMs
+});
+
 app.get('/register', (req, res) => {
     res.render('register');
 });
@@ -155,21 +170,6 @@ app.get('/logout', (req, res) => {
     req.logOut();
     res.redirect('/');
 })
-
-const loginLimiter = RateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10, // limit each IP to 10 login requests per windowMs
-});
-
-const submitLimiter = RateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 50, // limit each IP to 50 submit requests per windowMs
-});
-
-const submitPostLimiter = RateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 20, // limit each IP to 20 submit POST requests per windowMs
-});
 
 app.post('/register', (req, res) => {
 
