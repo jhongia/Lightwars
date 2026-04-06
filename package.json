@@ -1,1 +1,14 @@
-{\n  "name": "Lightwars",\n  "version": "1.0.0",\n  "description": "A game project",\n  "main": "index.js",\n  "scripts": {\n    "test": "echo 'Error: no test specified' && exit 1"\n  },\n  "dependencies": {\n    "express": "^4.22.1",\n    "mongoose": "latest",\n    "dotenv": "latest"\n  }\n}
+{
+  "name": "Lightwars",
+  "version": "1.0.0",
+  "description": "A game project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'Error: no test specified' && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.22.1",
+    "mongoose": "latest",
+    "dotenv": "latest"
+  }
+}
